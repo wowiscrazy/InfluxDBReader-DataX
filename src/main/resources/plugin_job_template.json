@@ -1,0 +1,31 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "influxdbreader",
+          "parameter": {
+            "dbType": "InfluxDB",
+            "address": "http://xxx.xxx.xxx.xxx:8086",
+            "username": "admin",
+            "password": "xxx",
+            "database": "xxx",
+            "querySql": "select * from xxx limit 2020"
+          }
+        },
+        "writer": {
+          "name": "streamwriter",
+          "parameter": {
+            "encoding": "UTF-8",
+            "print": true
+          }
+        }
+      }
+    ],
+    "setting": {
+      "speed": {
+        "channel": 1
+      }
+    }
+  }
+}
