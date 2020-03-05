@@ -10,6 +10,7 @@ import com.zyt.datax.plugin.reader.tsdbreader.TSDBReaderErrorCode;
 import com.zyt.datax.plugin.reader.tsdbreader.util.HttpUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zyt.datax.plugin.reader.tsdbreader.util.TimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,14 +66,17 @@ public class InfluxDBReader extends Reader {
                 String result= "";
                 try {
                     String url=address+tail
-                            +"?db="+ URLEncoder.encode(database ,enc);
+                            +"?db=" + URLEncoder.encode(database,enc) ;
                     if(!"".equals(username)){
-                        url+="&u="+ URLEncoder.encode(username,enc);
+                        url+="&u=" + URLEncoder.encode(username,enc);
                     }
                     if(!"".equals(password)){
-                        url+="&p="+URLEncoder.encode(password ,enc);
+                        url+="&p=" + URLEncoder.encode(password,enc) ;
                     }
-                    url+="&q="+URLEncoder.encode(querySql ,enc);
+                    if(querySql.contains("#lastMinute#")){
+                        this.querySql = querySql.replace("#lastMinute#", TimeUtils.getLastMinute());
+                    }
+                    url+="&q=" + URLEncoder.encode(querySql,enc);
                     result = HttpUtils.get(url);
                 } catch (Exception e) {
                     throw DataXException.asDataXException(
@@ -87,18 +91,27 @@ public class InfluxDBReader extends Reader {
                     JSONObject jsonObject = JSONObject.parseObject(result);
                     JSONArray results = (JSONArray) jsonObject.get("results");
                     JSONObject resultsMap = (JSONObject) results.get(0);
-                    JSONArray series= (JSONArray) resultsMap.get("series");
-                    JSONObject seriesMap = (JSONObject) series.get(0);
-                    JSONArray columns = (JSONArray) seriesMap.get("columns");
-                    JSONArray values = (JSONArray) seriesMap.get("values");
-                    for (Object row:values) {
-                        JSONArray rowArray = (JSONArray) row;
-                        Record record = recordSender.createRecord();
-                        for (Object s:rowArray) {
-                            record.addColumn(new StringColumn(s.toString()));
+                    if(resultsMap.containsKey("series")){
+                        JSONArray series= (JSONArray) resultsMap.get("series");
+                        JSONObject seriesMap = (JSONObject) series.get(0);
+                        if(seriesMap.containsKey("values")){
+//                            JSONArray columns = (JSONArray) seriesMap.get("columns");
+                            JSONArray values = (JSONArray) seriesMap.get("values");
+                            for (Object row:values) {
+                                JSONArray rowArray = (JSONArray) row;
+                                Record record = recordSender.createRecord();
+                                for (Object s:rowArray) {
+                                    record.addColumn(new StringColumn(s.toString()));
+                                }
+                                recordSender.sendToWriter(record);
+                            }
                         }
-                        recordSender.sendToWriter(record);
+
+                    }else if(resultsMap.containsKey("error")){
+                        throw DataXException.asDataXException(
+                                TSDBReaderErrorCode.ILLEGAL_VALUE, "结果集中包含错误！", null);
                     }
+
                 } catch (Exception e) {
                     throw DataXException.asDataXException(
                             TSDBReaderErrorCode.ILLEGAL_VALUE, "发送数据点的过程中出错！", e);
