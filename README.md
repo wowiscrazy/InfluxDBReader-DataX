@@ -15,15 +15,10 @@ InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
 将其中的influxdbreader整个文件夹拷贝出来黏贴到DataX软件的datax\plugin\reader文件夹下即可安装完成并使用。客官，下载后麻烦给点个小星星哦。）
 
 
-## 2 实现原理
 
-在底层实现上，InfluxDBReader 通过 HTTP 请求链接到 InfluxDB 实例。
+## 2 功能说明
 
-
-
-## 3 功能说明
-
-### 3.1 配置样例
+### 2.1 配置样例
 
 * 配置一个从 InfluxDB 数据库同步抽取数据到本地的作业：
 
@@ -69,7 +64,7 @@ InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
 
 
 
-### 3.2 参数说明
+### 2.2 参数说明
 
 * **name**
   * 描述：本插件的名称
@@ -112,30 +107,9 @@ InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
 
 
 
-### 3.3 类型转换
+### 2.3 类型转换
 
 | DataX 内部类型 | InfluxDB 数据类型                                                |
 | -------------- | ------------------------------------------------------------ |
 | String         | InfluxDB 数据点序列化字符串，包括 time、tags、fields 和 value |
-
-
-
-
-
-
-## 4 约束限制
-
-### 4.1 如果数据量过大，可能需要通过 `-j` 参数调整 JVM 内存大小
-
-考虑到下游 Writer 如果写入速度不及 InfluxDBReader 的查询数据，可能会存在积压的情况，因此需要适当地调整 JVM 参数。启动命令如下：
-
-```bash
- python datax/bin/datax.py influxdb2stream.json -j "-Xms4096m -Xmx4096m"
-```
-
-
-
-
-
-
 
