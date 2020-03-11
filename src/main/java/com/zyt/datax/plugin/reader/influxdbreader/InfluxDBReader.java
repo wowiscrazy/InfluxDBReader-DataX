@@ -95,13 +95,18 @@ public class InfluxDBReader extends Reader {
                         JSONArray series= (JSONArray) resultsMap.get("series");
                         JSONObject seriesMap = (JSONObject) series.get(0);
                         if(seriesMap.containsKey("values")){
-//                            JSONArray columns = (JSONArray) seriesMap.get("columns");
+                            JSONArray columns = (JSONArray) seriesMap.get("columns");
+                            LOG.info(columns.toJSONString());
                             JSONArray values = (JSONArray) seriesMap.get("values");
                             for (Object row:values) {
                                 JSONArray rowArray = (JSONArray) row;
                                 Record record = recordSender.createRecord();
                                 for (Object s:rowArray) {
-                                    record.addColumn(new StringColumn(s.toString()));
+                                    if(null!=s){
+                                        record.addColumn(new StringColumn(s.toString()));
+                                    }else {
+                                        record.addColumn(new StringColumn(null));
+                                    }
                                 }
                                 recordSender.sendToWriter(record);
                             }
