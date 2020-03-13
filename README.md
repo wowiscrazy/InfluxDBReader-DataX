@@ -34,10 +34,10 @@ InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
           "parameter": {
             "dbType": "InfluxDB",
             "address": "http://xxx.xxx.xxx.xxx:8086",
-            "username": "admin",
+            "username": "xxx",
             "password": "xxx",
             "database": "xxx",
-            "querySql": "select * from xxx limit 2020"
+            "querySql": "select time,xx,xx from xxxx limit 2020"
           }
         },
         "writer": {
