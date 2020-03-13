@@ -20,7 +20,7 @@ InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
 
 ### 2.1 配置样例
 
-* 配置一个从 InfluxDB 数据库同步抽取数据到本地的作业：
+* 配置一个从 InfluxDB 数据库同步抽取数据到本地的作业(注意：查询语句中，time字段放在第一个)：
 
 
 
