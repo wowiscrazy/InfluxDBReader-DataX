@@ -9,10 +9,10 @@ ___
 InfluxDBReader 插件实现了 DataX 从 InfluxDB 读取数据。
 原厂大佬的代码犹如神仙打架 ，ლ(ٱ٥ٱლ) ，渣农含泪自研丐版。亲测可用，除非口罩戴的姿势不对！
 
-作者信息： ZYT@2020@NanJing 。有问题联系：wowiscrazy@163.com 。欢迎贡献意见或者源码持续改进。
+作者信息： wowiscrazy@2020。有问题联系：wowiscrazy@163.com 。欢迎贡献意见或者源码持续改进。
 
 （源码基于父项目，不包含在本项目中，如果觉得依赖配置麻烦，可直接使用打包好的influxdbreader插件，
-位于target\datax\plugin\reader文件夹下，将其中的influxdbreader整个文件夹拷贝出来黏贴到DataX软件的datax\plugin\reader文件夹下即可安装完并使用。客官，下载后麻烦给点个小星星哦。）
+位于target\datax\plugin\reader文件夹下，将其中的influxdbreader整个文件夹拷贝出来黏贴到DataX软件的datax\plugin\reader文件夹下即可安装完并使用。客官，下载后可用麻烦给点个小星星哦。）
 
 
 
